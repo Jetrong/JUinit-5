@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id ("io.qameta.allure") version "3.0.0"
+}
+
+group   = 'com.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)   // Java 17+
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext{
+    allureVersion = "2.34.1"
+}
+
+allure {
+    version = allureVersion
+}
+
+
+
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
+    testImplementation 'io.qameta.allure:allure-selenide:2.15.0'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    /*
+     * UI-автотесты
+     */
+    testImplementation 'com.codeborne:selenide:7.2.3'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:6.2.0'
+
+    /*
+     * (Опц.) slf4j-реализация, чтобы не было WARNING в консоли
+     */
+    testRuntimeOnly 'ch.qos.logback:logback-classic:1.4.11'
+}
+
+/*
+ * Настройка задачи test
+ */
+test {
+    useJUnitPlatform()          // включаем JUnit 5
+    maxParallelForks = 3        // параллельные потоки (по желанию)
+    forkEvery = 50              // перезапуск JVM каждые 50 классов
+    reports {
+        html.required = true    // HTML-отчёт
+        junitXml.required = true// XML для CI
+    }
+    /*
+     * Системные проперти, доступные в тестах:
+     * System.getProperty("browser") и т.д.
+     */
+    systemProperty 'browser', System.getProperty('browser', 'chrome')
+    systemProperty 'env',     System.getProperty('env', 'local')
+}
+
+/*
+ * Утилитный таск «прогнать всё и собрать отчёт»
+ */
+task runTests(type: Test) {
+    description = 'Запуск всех автотестов'
+    group       = 'verification'
+    // переиспользует настройки секции test{}
+}
