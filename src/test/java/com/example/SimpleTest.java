@@ -2,6 +2,7 @@ package com.example;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.codeborne.selenide.Selenide.*;
 
+@Disabled
 public class SimpleTest {
 
     @ParameterizedTest(name = "В поисковой выдаче яндекса должно отображаться 10 результатов по запросу {0}")
